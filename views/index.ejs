@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+
+    <title>index</title>
+    <link rel="icon" type="image/x-icon" href="img/SVG/favicon.svg">
+
+  <style>
+    html,body {
+                        height: 100%;
+                        font-family: Osaka;
+                        color: rgba(51,51,51,1.0);
+                    }
+    
+    
+    .btn-primary{
+      background-color: rgb(217, 188, 144);
+      border-color:rgb(217, 188, 144);
+    }
+
+    .btn-primary:hover{
+            background-color: rgb(163, 141, 108)!important;
+            border-color:rgb(163, 141, 108)!important ;
+        }
+
+    .btn-outline-success{
+            border-color: rgb(163, 141, 108)!important;
+            color: rgb(163, 141, 108)!important;
+    }
+
+    .btn-outline-success:hover{
+            background-color: rgb(163, 141, 108)!important;
+            color: white!important;
+    }
+
+
+    .modal{
+      width:100%;
+      height: 100%;
+      position: absolute;
+      top:0;
+      left:0;
+    }
+
+    .modal .inner{
+      width:100%;
+      height:100%;
+      background-color: rgba(255,255,255,0.9);
+    }
+  </style>
+
+  </head>
+  <body style="background-color: rgb(240, 238, 235);">
+
+    <nav class="navbar navbar-expand-lg navbar-light" style="background-color: white;">
+      <a class="navbar-brand" href="/index?uname=<%=uname%> "><img src="img/SVG/logo.svg" style="width: 85px;"></a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+    
+      <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+        <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+          <!-- <li class="nav-item active">
+            <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Link</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link disabled" href="#">Disabled</a>
+          </li> -->
+        </ul>
+        <ul class="navbar-nav mt-2 mt-lg-0">
+          <li class="nav-item my-auto"><span>現在の名前：　</span></li>
+          <li class="nav-item my-auto"><span><%=uname%> </span></li>
+          <a href="/?uname=<%=uname%>"><button class="btn btn-outline-success ml-3" id="changename">名前を変更</button></a>
+          <input type="hidden" value="<%=samename%>" id="namestatus">
+        </ul>
+      </div>
+    </nav>
+
+    <div class="container-fluid">
+    
+    <div class="row col-12 pt-2 w-100 m-0">
+      <div class="col-md-9">
+        <div class="row">
+          <div class="col-md-12 p-1">
+            <div class="card m-1 w-100">
+              <div class="card-body">
+               <form class="form-inline p-0" action="room-search" method="POST">
+                 <input class="form-control mr-sm-2 col-10" type="search" placeholder="ルーム名を検索" aria-label="Search" name="searchword">
+                 <input type="hidden" value="<%=uname%>" name="uname">
+                 <button class="btn btn-outline-success my-2 my-sm-0" type="submit">検索</button>
+               </form>
+              </div>
+            </div>
+         </div>
+        </div>
+      </div>
+
+
+    </div>
+
+
+    <div class="row col-12 w-100 m-0">
+      <div class="col-md-9">
+        <!-- <div class="row pl-2 pt-2">
+          <h6 class="mr-4 my-auto">▶︎参加者順</h6>
+          <h6 class="my-auto">▶︎作成日時順</h6>
+        </div> -->
+      <div class="row">
+          <%results.forEach((rooms)=>{%>
+            <div class="col-md-4 p-1">
+              <div class="card m-1 w-100">
+                <div class="card-body">
+                  <p class="card-text"><%=rooms.rname%></p>
+                  <h6 class="card-subtitle mb-2 text-muted">現在の参加者：<%=rooms.numofpeople%></h6>
+                  <h6 class="card-subtitle mb-2 text-muted">開始日時：<%=rooms.start%></h6>
+                  <form action="joinRoom" method="POST">
+                    <input type="hidden" value="<%=rooms.rname%>" name="roomName">
+                    <input type="hidden" value="<%=uname%>" name="uname">
+                    <button type="submit" class="btn btn-primary">参加</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+
+          <%})%>
+      </div>    <!--row fin-->
+
+    </div>
+
+    <div class="col-md-3 pl-1">
+      <div class="row pl-1">
+        <div class="col-md-12 pr-0">
+        <div class="card mt-2 w-100">
+          <div class="card-body">
+            <h5 class="card-title">ルームを作成</h5>
+
+            <form action="room-create" method="post">
+              <label>ルーム名（45字以内）</label>
+              <!-- <input type="text" name="roomName" class="w-100 mb-2" required> -->
+              <textarea type="text" name="roomName" class="w-100 mb-2" rows="3" maxlength="45" required></textarea>
+              <input type="hidden" value="<%=uname%>" name="uname">
+              <button type="submit" class="btn btn-primary">作成</button>
+            </form>
+          
+          </div>
+        </div>
+      </div>
+       </div>
+    </div>
+
+  </div>
+
+  </div>
+    
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+
+    <script type="text/javascript">
+      let samenameval=document.querySelector("#namestatus");
+      console.log(samenameval.value);
+
+      var queryString = window.location.search;
+      var queryObject = new Object();
+      if(queryString){
+        queryString = queryString.substring(1);
+        var parameters = queryString.split('&');
+
+        for (var i = 0; i < parameters.length; i++) {
+          var element = parameters[i].split('=');
+
+          var paramName = decodeURIComponent(element[0]);
+          var paramValue = decodeURIComponent(element[1]);
+
+          queryObject[paramName] = paramValue;
+
+          console.log('status is '+queryObject.exists);
+        }
+      }
+
+      if(queryObject.exists){
+        alert("その名前は現在このroomで使われています。名前を変更してください。");
+        let url=new URL(window.location.href);
+        let params = url.searchParams;
+        params.delete('exists');
+        location.href='index?'+params;
+        
+      }
+
+      if(queryObject.roomexists){
+        alert("その名前のルームは存在します。ルーム名を変更してください。");
+        let url=new URL(window.location.href);
+        let params = url.searchParams;
+        params.delete('roomexists');
+        location.href='index?'+params;
+      }
+
+
+      
+    </script>
+  </body>
+</html>
